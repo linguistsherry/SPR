@@ -1,0 +1,152 @@
+var shuffleSequence = seq("setcounter", "intro", 
+                          sepWith("sepprac", seq("prac")), "presepA", "dummysep", 
+                          sepWith("sepexp", rshuffle(startsWith("tense"), startsWith("filler"))));
+var practiceItemTypes = ["prac"];
+var completionMessage = "Thank you for your participation! Your completion code for Mechanical Turk is: chimsky"
+
+    
+var defaults = [
+    "Separator", {
+        normalMessage: "Please wait."
+    },
+    "DashedSentence", {
+        mode: "self-paced reading", display: "in place"
+    },
+    "Question", {
+        as: ["Yes", "No"],
+        randomOrder: false
+    },
+    "Message", {
+        hideProgressBar: false
+    },
+    "Form", {
+        hideProgressBar: true,
+        continueOnReturn: true
+    }
+];
+
+ // insert breaks
+function modifyRunningOrder(ro) {
+
+ for (var i = 0; i < ro.length; ++i) {
+ if (i % 24 == 22 && i > 30 && i < 300) {
+ ro[i].push(new DynamicElement(
+ "Message",
+ { html: "<p>Please take a short break. The experiment will continue in 10 seconds.</p>", transfer: 10000 },
+ true
+ ));
+ }
+ }
+ return ro;
+ }
+
+
+var items = [
+
+   ["setcounter", "__SetCounter__", { }], 
+
+   ["intro", "Form", {consentRequired: true, html: {include: "intro.html" }} ],
+   ["intro", "Form", {consentRequired: true, html: {include: "intro1.html" }} ],
+   ["intro", "Form", {consentRequired: true, html: {include: "intro2.html" }} ],
+   ["intro", "Form", {consentRequired: true, html: {include: "intro3.html" }} ],
+   ["exit", "Form", {consentRequired: false, html: {include: "exit.html" }} ],
+    
+    ["sepprac", "Separator", {transfer: 1000, errorMessage: "Wrong. Please wait."}],
+    
+    ["sepexp", "Separator", {transfer: 500}],
+
+    ["break", "Message", {
+        html: { include: "break.html" },
+        transfer: "keypress"
+    } ],
+    
+
+    
+    // Practice
+    
+["prac", "DashedSentence", {s: ["This is", "just a practice sentence", "to get you used", "to the method", "of presentation."]}, "Question",  {q:"Was that sentence easy?"}, Separator, { }],
+["prac", "DashedSentence", {s: ["This is", "another practice sentence", "which is longer", "and a little more complicated", "than the one", "you just read."]}, "Question",  {q:"Did you read that at a normal pace?" }],
+                           
+["prac", Message, {consentRequired: false, transfer: "keypress",
+                     html: ["div",
+                           ["p", "That's all there is to it! Let's try some practice sentences more like the ones you'll be seeing in the experiment:"]
+                           ]}],
+
+["prac", "DashedSentence", {s: ["My favorite singer", "is famous for", "revolutionizing country music.", "My favorite movie star", "is a high-achieving", "young woman.", "They are both", "very inspiritional.", "I have", "learned a lot", "from their stories."]}, "Question", {hasCorrect: 0, q: "Is any singer mentioned in the sentence?"}],
+["prac", "DashedSentence", {s: ["This desk", "belongs to", "Sandra.", "That desk over there", "belongs to", "her brother Nick.", "Both of these tables", "is black.", "The siblings", "are thinking about", "selling the tables."]}, "Question", {hasCorrect: 1, q: "Does Sandra own a white table?"}],
+["prac", "DashedSentence", {s: ["Patricia", "works as", "a truck driver.", "Her best friend,", "Tania,", "is a hard-working policewoman.", "He is really good", "at his job.", "They have", "known each other", "since high school."]}, "Question",{hasCorrect: 1, q: "Does Tania work as a nurse?"}],
+
+["prac", Message, {consentRequired: false, transfer: "keypress",
+                    html: ["div",
+                          ["p", "Some sentences, like the one you just read, are fairly long and complex. How did you do on the comprehension question?"],
+                          ["p", "Try your hand at these next few sentences. Don't overthink your response: go with your gut feeling or intuition!"]
+                          ]}],
+
+["prac", "DashedSentence", {s: ["Sheryl", "is a mother", "of three boys.", "Helen", "has a son", "and two daughters.", "They were both", "very good parents.", "Their children", "are in the", "same kindergarten."]}, "Question", {hasCorrect: 0, q: "Is any woman mentioned in the sentence?"}],
+["prac", "DashedSentence", {s: ["This apartment", "has a big kitchen", "and a bathroom.", "That apartment", "down the hallway", "is smaller but quite cozy.", "Both of these apartments", "are very expensive.", "Julia has been", "looking for", "a new place to stay."]}, "Question", {hasCorrect: 1, q: "Are the apartments quite cheap?"}],
+["prac", "DashedSentence", {s: ["Fiona", "went to a film", "with her boyfriend.", "Her roommate,", "Ginny,", "went clubbing with her friends.", "They both go out", "last night.", "Everyone should", "have some fun", "on the weekend."]}, "Question", {hasCorrect: 1, q: "Did Ginny go to the film with Fiona?"}],
+["prac", "DashedSentence", {s: ["Dylan has been", "playing the guitar", "since he was six.", "His brother,", "Jay,", "is good at the piano.", "They are both", "very gifted musicians.", "Their parents", "have always been", "very proud of them."]}, "Question", {hasCorrect: 1, q:"Does Jay play the guitar?"}],   
+    
+["prac", Message, {consentRequired: false, transfer: "keypress",
+                     html: ["div",
+                           ["p", "That's all the practice! When you're ready to begin the experiment, press any button to move ahead. REMEMBER: it will last approximately 80 minutes, and will require your full attention throughout that period. Thank you for your help!"]
+                           ]}],
+
+
+["presepA", Separator, {transfer: 3000, normalMessage: "Get your hands in position, and get ready to begin!" }],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+["dummysep", Separator, {transfer: 10, normalMessage: ""}],
+
+    //Tense Stimuli List (sample)
+
+[["tense.D.PRES.mismatch",1], "DashedSentence", {s: ["This house was", "built for John,", "who passed away", "last year.", "The one over there", "belonged to his brother, Bill,", "who lived his whole life", "in Europe.","They are both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.L.PRES.match",1], "DashedSentence", {s: ["This house was", "built for John,", "who is a local real estate agent", "in town.", "The one over there", "belongs to his brother, Bill,", "who now lives", "in Europe.","They are both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.C.PRES.C",1], "DashedSentence", {s: ["This house was", "built for John,", "who passed away", "last year.", "The one over there", "belongs to his brother, Bill,", "who now lives", "in Europe.","They are both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.D.PAST.match",1], "DashedSentence", {s: ["This house was", "built for John,", "who passed away", "last year.", "The one over there", "belonged to his brother, Bill,", "who lived his whole life", "in Europe.","They were both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.L.PAST.mismatch",1], "DashedSentence", {s: ["This house was", "built for John,", "who is a local real estate agent", "in town.", "The one over there", "belongs to his brother, Bill,", "who now lives", "in Europe.","They were both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.C.PAST.C",1], "DashedSentence", {s: ["This house was", "built for John,", "who passed away", "last year.", "The one over there", "belongs to his brother, Bill,", "who now lives", "in Europe.","They were both","very handsome.","Their relatives","are gathering together","next month for a reunion."]}, "Question", {q: "Was the family union last month?", hasCorrect: 1}],
+[["tense.D.PRES.mismatch",2], "DashedSentence", {s: ["My deceased niece Jenny", "always cried for her mother", "every time", "she fell sick.", "Sadly, her mother", "died during childbirth", "and never got to", "hold the girl.","They both have","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.L.PRES.match",2], "DashedSentence", {s: ["My three-month-old niece Jenny", "always cries for her mother", "every time", "she wakes up.", "Sadly, her mother", "had a hard time during childbirth", "and is still too weak", "to hold the girl.","They both have","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.C.PRES.C",2], "DashedSentence", {s: ["My three-month-old niece Jenny", "always cries for her mother", "every time", "she wakes up.", "Sadly, her mother", "died during childbirth", "and never got to", "hold the girl.","They both have","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.D.PAST.match",2], "DashedSentence", {s: ["My deceased niece Jenny", "always cried for her mother", "every time", "she fell sick.", "Sadly, her mother", "died during childbirth", "and never got to", "hold the girl.","They both had","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.L.PAST.mismatch",2], "DashedSentence", {s: ["My three-month-old niece Jenny", "always cries for her mother", "every time", "she wakes up.", "Sadly, her mother", "had a hard time during childbirth", "and is still too weak", "to hold the girl.","They both had","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.C.PAST.C",2], "DashedSentence", {s: ["My three-month-old niece Jenny", "always cries for her mother", "every time", "she wakes up.", "Sadly, her mother", "died during childbirth", "and never got to", "hold the girl.","They both had","blue eyes.","Her father","is still not sure","what he will do."]}, "Question", {q: "Did the mother suffer during child birth?", hasCorrect: 0}],
+[["tense.D.PRES.mismatch",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "was killed in", "a car accident.", "His wife Naomi,", "who was an award-wining actress,", "was also killed in", "the accident.","They are both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is it the husband’s agent who is going to make a statement?", hasCorrect: 1}],
+[["tense.L.PRES.match",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "survived in", "a car accident.", "His wife Naomi,", "who is an award-wining actress,", "was shocked", "by the news.","They are both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is the husband’s agent going to make a statement?", hasCorrect: 1}],
+[["tense.C.PRES.C",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "was killed in", "a car accident.", "His wife Naomi,", "who is an award-wining actress,", "was shocked", "by the news.","They are both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is the husband’s agent going to make a statement?", hasCorrect: 1}],
+[["tense.D.PAST.match",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "was killed in", "a car accident.", "His wife Naomi,", "who was an award-wining actress,", "was also killed in", "the accident.","They were both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is the husband’s agent going to make a statement?", hasCorrect: 1}],
+[["tense.L.PAST.mismatch",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "survived in", "a car accident.", "His wife Naomi,", "who is an award-wining actress,", "was shocked", "by the news.","They were both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is the husband’s agent going to make a statement?", hasCorrect: 1}],
+[["tense.C.PAST.C",3], "DashedSentence", {s: ["James, an acclaimed movie director", "who cheated on his wife,", "was killed in", "a car accident.", "His wife Naomi,", "who is an award-wining actress,", "was shocked", "by the news.","They were both ","Hollywood royality.","Her agent","will make a statement","to the press soon."]}, "Question", {q: "Is the husband’s agent going to make a statement?", hasCorrect: 1}],
+[["tense.D.PRES.mismatch",4], "DashedSentence", {s: ["Sarah looked extremely upset", "yesterday at school,", "and committed suicide", "sometime in the evening.", "She just lost her husband,", "who had suffered", "from lung cancer", "for a long time.","They are both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.L.PRES.match",4], "DashedSentence", {s: ["Sarah looks extremely upset", "today at school,", "and she keeps", "crying on and off.", "She had finally left", "her husband,", "who has been", "abusing her for so long.","They are both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.C.PRES.C",4], "DashedSentence", {s: ["Sarah looks extremely upset", "today at school,", "and she keeps", "crying on and off.", "She just lost her husband,", "who had suffered", "from lung cancer", "for a long time.","They are both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.D.PAST.match",4], "DashedSentence", {s: ["Sarah looked extremely upset", "yesterday at school,", "and committed suicide", "sometime in the evening.", "She just lost her husband,", "who had suffered", "from lung cancer", "for a long time.","They were both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.L.PAST.mismatch",4], "DashedSentence", {s: ["Sarah looks extremely upset", "today at school,", "and she keeps", "crying on and off.", "She had finally left", "her husband,", "who has been", "abusing her for so long.","They were both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.C.PAST.C",4], "DashedSentence", {s: ["Sarah looks extremely upset", "today at school,", "and she keeps", "crying on and off.", "She just lost her husband,", "who had suffered", "from lung cancer", "for a long time.","They were both","high school teachers.","The school","was shocked","by the news."]}, "Question", {q: "Is any couple mentioned in the sentence?", hasCorrect: 0}],
+[["tense.D.PRES.mismatch",5], "DashedSentence", {s: ["The office building", "was completely", "demolished", "during the tsunami.", "The other building,", "which was very", "well-furnished,", "was also destroyed.","They both have","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+[["tense.L.PRES.match",5], "DashedSentence", {s: ["The office building", "was slightly damaged", "during the tsunami,", "but is still functioning.", "The other building,", "which is very", "well-furnished,", "is now in service.","They both have","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+[["tense.C.PRES.C",5], "DashedSentence", {s: ["The office building", "was completely", "demolished", "during the tsunami.", "The other building,", "which is very", "well-furnished,", "is now in service.","They both have","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+[["tense.D.PAST.match",5], "DashedSentence", {s: ["The office building", "was completely", "demolished", "during the tsunami.", "The other building,", "which was very", "well-furnished,", "was also destroyed.","They both had","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+[["tense.L.PAST.mismatch",5], "DashedSentence", {s: ["The office building", "was slightly damaged", "during the tsunami,", "but is still functioning.", "The other building,", "which is very", "well-furnished,", "is now in service.","They both had","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+[["tense.C.PAST.C",5], "DashedSentence", {s: ["The office building", "was completely", "demolished", "during the tsunami.", "The other building,", "which is very", "well-furnished,", "is now in service.","They both had","twenty floors.","The planning commission","has been reviewing","the zoning of that area."]}, "Question", {q: "Did the office building remain intact during the tsunami?", hasCorrect: 1}],
+
+
+
+    // INCLUDE THE FILLERS: sample items
+
+[["filler.all.PAST.good.",116], "DashedSentence", {s: ["The lobbyists", "tried to persuade a senator", "to reform", "the social welfare system.","Meanwhile,", "some NGOs produced", "many leaflets to hand out", "to the public.","All of them","were involved in policy making.","They had","an impact on","the future of our country."]}, "Question", {q: "Is any NGO mentioned in the sentence?", hasCorrect: 0}],
+[["filler.all.PRES.good.",117], "DashedSentence", {s: ["The ball gown", "is nicely", "embroidered", "with silk.","The tiara", "and high heels", "have very glittery", "designs.","All of them","are suitable for a prom.","The girls","are really","looking forward to it."]}, "Question", {q: "Is any diamond ring mentioned in the sentence?", hasCorrect: 1}],
+[["filler.all.PAST.good.",118], "DashedSentence", {s: ["The babies", "in the", "nursery room", "were giggling.","The toddlers", "were chasing", "after one another", "in the play room.","All of them","were happy to be around their mothers.","Mother’s love","is eternal","and unconditional."]}, "Question", {q: "Were the toddlers having fun?", hasCorrect: 0}],
+[["filler.all.PRES.good.",119], "DashedSentence", {s: ["The kangaroos", "carry", "their babies", "in a pouch.","The koalas", "and platypuses", "are also", "very adorable creatures.","All of them","are native to Australia.","They have","attracted tourists","from around the world."]}, "Question", {q: "Is the sentence about African animals?", hasCorrect: 1}],
+[["filler.all.PAST.good.",120], "DashedSentence", {s: ["The secretaries", "had a hard time", "scheduling", "so many conferences.","The managers", "were drafting up new business plans", "and had no time", "for breaks.","All of them","were very busy.","Luckily,","it was almost the end","of the peak season."]}, "Question", {q: "Were the secretaries really busy?", hasCorrect: 0}]
+
+
+];
